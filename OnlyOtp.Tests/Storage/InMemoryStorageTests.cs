@@ -7,7 +7,36 @@ namespace OnlyOtp.Tests.Storage
     [TestClass]
     public class InMemoryStorageTests
     {
-        #region Arguments Check
+        #region GetOtp arguments check
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void GetOtp_Should_ThrowArgumentException_When_NullOtpVerificationTokenPassed()
+        {
+            //Arrange
+            var otpStorage = new InMemoryOtpStorage();
+            var token = otpStorage.GetOtp(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void GetOtp_Should_ThrowArgumentException_When_EmptyOtpVerificationTokenPassed()
+        {
+            //Arrange
+            var otpStorage = new InMemoryOtpStorage();
+            var token = otpStorage.GetOtp(string.Empty);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void GetOtp_Should_ThrowArgumentException_When_WhiteSpaceOtpVerificationTokenPassed()
+        {
+            //Arrange
+            var otpStorage = new InMemoryOtpStorage();
+            var token = otpStorage.GetOtp("   ");
+        }
+
+        #endregion
+        #region PutOtp arguments Check
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void PutOtp_Should_ThrowArgumentException_When_NullOtpPassed()
@@ -33,11 +62,11 @@ namespace OnlyOtp.Tests.Storage
             //Arrange
             var otpStorage = new InMemoryOtpStorage();
             var token = otpStorage.PutOtp("   ");
-        } 
+        }
         #endregion
 
         [TestMethod]
-        public void PutOtp_Should_StoreOtpsAndReturnNotNullToken_When_NotNullOtpPassed()
+        public void PutOtp_Should_StoreOtpsAndReturnNotNullToken_When_NotNullOtpVerificationTokenPassed()
         {
             //Arrange
             var otpStorage = new InMemoryOtpStorage();

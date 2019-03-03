@@ -6,8 +6,10 @@ namespace OnlyOtp
 {
     interface IOtp
     {
-        string GenerateOtp(int length);        
-        (string Otp, string OtpVerificationToken) GenerateAndStoreOtp(int length);
+        string GenerateOtp();
+        string GenerateOtp(OtpOptions otpOptions);        
+        (string Otp, string OtpVerificationToken) GenerateAndStoreOtp();
+        (string Otp, string OtpVerificationToken) GenerateAndStoreOtp(OtpOptions otpOptions);
         bool IsOtpMached(string otpUnderTest, string OtpVerificationToken);        
     }
 }

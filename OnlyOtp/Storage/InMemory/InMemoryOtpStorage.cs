@@ -27,6 +27,7 @@ namespace OnlyOtp.Storage.InMemory
 
         public string GetOtp(string otpVerificationToken)
         {
+            otpVerificationToken = otpVerificationToken?.Trim();
             if (string.IsNullOrEmpty(otpVerificationToken))
             {
                 throw new ArgumentException();
