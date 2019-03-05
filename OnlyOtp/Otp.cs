@@ -1,5 +1,6 @@
 ﻿using OnlyOtp.Storage;
-using OnlyOtp.Storage.InMemory;
+using OnlyOtp.Storage.Abstractions;
+//using OnlyOtp.Storage.InMemory;
 using System;
 using System.Linq;
 
@@ -9,15 +10,15 @@ namespace OnlyOtp
     {
         private readonly IOtpStorage _otpStorage;
         private IRandomProvider _randomProvider;
-        public Otp()
-        {
-            _otpStorage = new InMemoryOtpStorage();
-        }
+        //public Otp()
+        //{
+        //    _otpStorage = new InMemoryOtpStorage();
+        //}
         public Otp(IOtpStorage otpStorage)
         {
             if (otpStorage == null)
                 throw new ArgumentNullException(nameof(otpStorage));
-            otpStorage = _otpStorage;
+            _otpStorage = otpStorage;
         }
 
         public string GenerateOtp()

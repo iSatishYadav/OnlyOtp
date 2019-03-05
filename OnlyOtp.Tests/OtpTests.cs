@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OnlyOtp.Storage.InMemory;
 using System;
 
 namespace OnlyOtp.Tests
@@ -6,6 +7,12 @@ namespace OnlyOtp.Tests
     [TestClass]
     public class OtpTests
     {
+        private Otp _otpProvider;
+        public OtpTests()
+        {
+            _otpProvider = new Otp(new InMemoryOtpStorage());
+        }
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void OtpStorageShouldNotBeNull()
@@ -15,8 +22,7 @@ namespace OnlyOtp.Tests
         [TestMethod]
         public void GenerateOtp_Should_Return6DigitNumericOtp_When_NoOptionsArePassed()
         {
-            var otp = new Otp();
-            string testOtp = otp.GenerateOtp();
+            string testOtp = _otpProvider.GenerateOtp();
             foreach (var test in testOtp.ToCharArray())
             {
                 Assert.IsTrue(char.IsDigit(test));
@@ -27,9 +33,7 @@ namespace OnlyOtp.Tests
         public void GenerateOtp_Should_ReturnNumbers_When_NumberOptionIsPassed()
         {
             var number = new Random().Next(1, 100);
-
-            var otp = new Otp();
-            string testOtp = otp.GenerateOtp(new OtpOptions { Length = number, OtpContents = OtpContents.Number, ShouldBeCryptographicallyStrong = false });
+            string testOtp = _otpProvider.GenerateOtp(new OtpOptions { Length = number, OtpContents = OtpContents.Number, ShouldBeCryptographicallyStrong = false });
             Assert.AreEqual(number, testOtp.Length);
             foreach (var test in testOtp.ToCharArray())
             {
@@ -39,8 +43,7 @@ namespace OnlyOtp.Tests
         [TestMethod]
         public void GenerateAndStoreOtp_Should_Return6DigitNumericOtpAndNotNullToken_When_NoOptionsArePassed()
         {
-            var otp = new Otp();
-            (string testOtp, string token) = otp.GenerateAndStoreOtp();
+            (string testOtp, string token) = _otpProvider.GenerateAndStoreOtp();
             Assert.IsNotNull(token);
             foreach (var test in testOtp.ToCharArray())
             {
@@ -52,59 +55,57 @@ namespace OnlyOtp.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void IsOtpMatched_Should_ThrowArgumentException_WhenOtpIsNull()
         {
-            var otp = new Otp().IsOtpMached(null, "sdasfasdf");
+            _otpProvider.IsOtpMached(null, "sdasfasdf");
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void IsOtpMatched_Should_ThrowArgumentException_WhenOtpIsEmpty()
         {
-            var otp = new Otp().IsOtpMached(string.Empty, "sdasfasdf");
+            var otp = _otpProvider.IsOtpMached(string.Empty, "sdasfasdf");
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void IsOtpMatched_Should_ThrowArgumentException_WhenOtpIsWhitespaces()
         {
-            var otp = new Otp().IsOtpMached("    ", "sdasfasdf");
+            var otp = _otpProvider.IsOtpMached("    ", "sdasfasdf");
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void IsOtpMatched_Should_ThrowArgumentException_WhenOtpVerificationTokenIsNull()
         {
-            var otp = new Otp().IsOtpMached("asdfasfd", null);
+            var otp = _otpProvider.IsOtpMached("asdfasfd", null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void IsOtpMatched_Should_ThrowArgumentException_WhenOtpVerificationTokenIsEmpty()
         {
-            var otp = new Otp().IsOtpMached("asdfasfd", string.Empty);
+            var otp = _otpProvider.IsOtpMached("asdfasfd", string.Empty);
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void IsOtpMatched_Should_ThrowArgumentException_WhenOtpVerificationTokenIsWhitespaces()
         {
-            var otp = new Otp().IsOtpMached("asdfasdf", "  ");
+            var otp = _otpProvider.IsOtpMached("asdfasdf", "  ");
         }
 
         [TestMethod]
         public void GenerateStoreAndMatching_Should_BeSuccessfull_WhenDefaultOptionsArePassed()
-        {
-            var otpProvider = new Otp();
-            (string otp, string token ) = otpProvider.GenerateAndStoreOtp();
-            Assert.IsTrue(otpProvider.IsOtpMached(otp, token));
+        {            
+            (string otp, string token) = _otpProvider.GenerateAndStoreOtp();
+            Assert.IsTrue(_otpProvider.IsOtpMached(otp, token));
         }
 
         [TestMethod]
         public void GenerateStoreAndMatching_Should_BeSuccessfull_WhenRandomLengthWithCryptoCheckedArePassed()
         {
-            var length = new Random().Next(1, 100);
-            var otpProvider = new Otp();            
-            (string otp, string token) = otpProvider.GenerateAndStoreOtp(new OtpOptions { Length = length, ShouldBeCryptographicallyStrong = true });
+            var length = new Random().Next(1, 100);            
+            (string otp, string token) = _otpProvider.GenerateAndStoreOtp(new OtpOptions { Length = length, ShouldBeCryptographicallyStrong = true });
             foreach (var test in otp.ToCharArray())
             {
                 Assert.IsTrue(char.IsDigit(test));
             }
-            Assert.IsTrue(otpProvider.IsOtpMached(otp, token));
+            Assert.IsTrue(_otpProvider.IsOtpMached(otp, token));
         }
     }
 }

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OnlyOtp.Storage\OnlyOtp.Storage.Abstractions\OnlyOtp.Storage.Abstractions.csproj" />
+    <ProjectReference Include="..\OnlyOtp.Storage.Abstractions\OnlyOtp.Storage.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OnlyOtp.Storage\OnlyOtp.Storage.InMemory\OnlyOtp.Storage.InMemory.csproj" />
     <ProjectReference Include="..\OnlyOtp\OnlyOtp.csproj" />
   </ItemGroup>
 

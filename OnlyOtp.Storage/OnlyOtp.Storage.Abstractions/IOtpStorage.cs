@@ -1,4 +1,6 @@
-﻿namespace OnlyOtp.Storage
+﻿using System;
+
+namespace OnlyOtp.Storage.Abstractions
 {
     public interface IOtpStorage
     {
